@@ -35,3 +35,61 @@
     height: 100%;
     position: fixed;
 }
+
+.menu-wrapper {
+    position: absolute;
+    top: 0;
+    background: white;
+    width: 100%;
+}
+
+.menu-wrapper .menu {
+    padding: 12px;
+    border-bottom: #cecece 1px solid;
+    box-shadow: aliceblue 0 2px;
+}
+
+.menu-wrapper .menu a {
+    border: 1px solid #cecece;
+    border-radius: 16px;
+    padding: 4px 12px;
+    margin: 0 8px;
+    background-color: white;
+    transition: background-color 0.6s;
+}
+
+.menu-wrapper .menu a:hover {
+    border: 1px solid #cecece;
+    border-radius: 16px;
+    background-color: #56abe4;
+    cursor: pointer;
+}
+
+.menu-wrapper .button {
+    display: inline-block;
+    border-radius: 12px;
+    width: 24px;
+    border: 1px solid #cecece;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    background-color: white;
+    transition: background-color 0.6s;
+}
+
+.menu-wrapper .button:hover {
+    cursor: pointer;
+    background-color: #56abe4;
+}
+
+.menu-wrapper .button.active {
+    cursor: pointer;
+    transform: rotate(180deg);
+}
+
+.menu-wrapper .button img {
+    height: 14px;
+}

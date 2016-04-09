@@ -125,7 +125,7 @@ function emotionMakeParameter(unit, actionType, speed, period, loop) {
         curIdx: 0,
         countDown: 0,
         speed: speed ? speed : 3,
-        periodLeft: period ? period : 3
+        periodLeft: period ? period : 2
     }
 }
 
@@ -173,6 +173,25 @@ var setBasicEmotion = {
 
     surprise: function () {
 
+    },
+
+    fun: function () {
+
+        var rand = Math.random() < 0.3;
+        if (rand) {
+            runningActions.push(emotionMakeParameter("right eyebrow", "raise", null, null, Loop.smooth.map(function (x) { return x / 1; })));
+            runningActions.push(emotionMakeParameter("left eyebrow", "raise", null, null, Loop.smooth.map(function (x) { return x / 1; })));
+            runningActions.push(emotionMakeParameter("right eye", "raise", parseInt(Math.random() * 50), null, Loop.smooth.map(function (x) { return x; })));
+            runningActions.push(emotionMakeParameter("left eye", "raise", parseInt(Math.random() * 50), null, Loop.smooth.map(function (x) { return x; })));
+            runningActions.push(emotionMakeParameter("mouse", "smile", null, null, Loop.smooth.map(function (x) { return x; })));
+        }
+        else {
+            runningActions.push(emotionMakeParameter("right eyebrow", "raise", null, null, Loop.smooth.map(function (x) { return x / 1; })));
+            runningActions.push(emotionMakeParameter("left eyebrow", "raise", null, null, Loop.smooth.map(function (x) { return x / 1; })));
+            runningActions.push(emotionMakeParameter("right eye", "raise", null, null, Loop.smooth.map(function (x) { return x; })));
+            runningActions.push(emotionMakeParameter("left eye", "raise", null, null, Loop.smooth.map(function (x) { return x; })));
+            runningActions.push(emotionMakeParameter("mouse", "smile", null, null, Loop.smooth.map(function (x) { return x; })));
+        }
     }
 };
 

@@ -75,6 +75,7 @@ function getFaceInfo() {
         faceWidth = faceInfo.rect.right - faceInfo.rect.left;
         console.log("get face info complete.");
         addNaturalBlink();
+        $('.menu-wrapper').show();
     };
     xhr.send(formData);
 
@@ -145,3 +146,36 @@ function min(a, b) {
     return a < b ? a : b;
 }
 
+$(document).ready(function () {
+    // inject a menu
+    var $menuWrapper = $('<div class="menu-wrapper"><div class="menu"></div><a class="button"><img src="img/icon-ddown.png"></a></div>');
+    var $menu = $menuWrapper.find('.menu');
+    $menu.append('<a data-emotion="happy">Happiness</a>');
+    $menu.append('<a data-emotion="anger">Anger</a>');
+    $menu.append('<a data-emotion="sadness">Sadness</a>');
+    $menu.append('<a data-emotion="fun">Fun~</a>');
+    $('.canvas-wrapper').append($menuWrapper);
+    $menuWrapper.hide();
+    $menu.hide();
+
+    $menu.find('a').click(function (e) {
+        var $this = $(this);
+        var emotion = $this.data('emotion');
+        clearLoop();
+        stopLoop();
+        setBasicEmotion[emotion]();
+        startLoop();
+    });
+
+    $menuWrapper.find('.button').click(function () {
+        var $this = $(this);
+        if ($this.hasClass('active')) {
+            $this.removeClass('active');
+            $menu.hide();
+        }
+        else {
+            $this.addClass('active');
+            $menu.show();
+        }
+    });
+});
