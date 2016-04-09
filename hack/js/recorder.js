@@ -104,6 +104,7 @@
         xhr.open('POST', uploadurl, true);
         xhr.onload = function (e) {
             console.log("get voice info complete.");
+            $("#spinner").hide();
             var result = JSON.parse(e.target.responseText);
             var tone = result.tone;
             tone = tone.sort(function (x, y) { return x.score < y.score });

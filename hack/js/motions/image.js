@@ -50,6 +50,9 @@ function imageInit(uploadId, originCanvasId, targetCanvasId) {
 
         document.getElementById("image-upload").setAttribute("hidden", "true");
         document.getElementById("upload").setAttribute("hidden", "true");
+        document.getElementById("title").setAttribute("hidden", "true");
+        document.getElementById("description").setAttribute("hidden","true");
+        $("#record").show();
     }
 
     uploadElement = el(uploadId);
