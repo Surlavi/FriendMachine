@@ -1,13 +1,15 @@
 var express = require('express');
 var router = express.Router();
+var multipart=require('connect-multiparty');
+var multipartMiddleWare=multipart();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/gettone',function(req, res, next) {
-  console.log(req);
+router.post('/gettone',multipartMiddleWare,function(req, res, next) {
+  console.log(req.files);
   var watson=require('watson-developer-cloud');
   var fs=require('fs');
   var speech_to_text=watson.speech_to_text({
@@ -20,9 +22,15 @@ router.post('/gettone',function(req, res, next) {
     content_type:'audio/wav',
 	continuous:true,
   };
-  console.log(req.files);
+  //console.log(req.files);
   var recognizeStream=speech_to_text.createRecognizeStream(params);
-  fs.createReadStream("test.wav").pipe(recognizeStream);
+  var inputfile=req.files.file;
+  var origpath=inputfile.path,dstpath=inputfile.originalFilename;
+  fs.rename(origpath,dstpath,function(err){
+    if(err) console.log(err);
+    else console.log('rename ok');
+  });
+  fs.createReadStream(dstpath).pipe(recognizeStream);
   //var str=recognizeStream.read();
   //console.log(str);
   var text="Hi Team, I know the times are difficult! Our sales have been disappointing for the past three quarters for our data analytics product suite. We have a competitive data analytics product suite in the industry. But we need to do our job selling it!";
