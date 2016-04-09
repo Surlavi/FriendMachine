@@ -27,6 +27,12 @@
         <script src="js/motions/image.js"></script>
         <script src="js/motions/main.js"></script>
 
+        <script type="text/javascript">
+            var phoneWidth =  parseInt(window.screen.width);
+            var phoneScale = phoneWidth / 480;
+            document.write('<meta name="viewport" content="width=480, minimum-scale = '+phoneScale+', maximum-scale = '+phoneScale+', target-densitydpi=device-dpi">');
+        </script>
+
         <script>
             $(document).ready(function () {
                 resizeCanvas();
