@@ -52,9 +52,12 @@ router.post('/gettone',multipartMiddleWare,function(req, res, next) {
     });
     tone_analyzer.tone({text:chunk,sentences:false,tones:'emotion'},function(err,tone){
       if(err) res.send(err);
-	  else {console.log(JSON.stringify(tone.document_tone.tone_categories[0].tones,null,2));res.send(tone);}
+	  else {console.log(JSON.stringify(tone.document_tone.tone_categories[0].tones,null,2));
+          res.send({ tone: tone.document_tone.tone_categories[0].tones});
+      }
     });
   });
 });
 
 module.exports = router;
+
