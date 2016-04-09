@@ -60,7 +60,7 @@ var ImageAgent;
 
 function getFaceInfo() {
 
-    var url = '/sensetime.php';
+    var url = '/FriendMachine/sensetime.php';
 
     var formData = new FormData();
     formData.append('file', uploadElement.files[0]);

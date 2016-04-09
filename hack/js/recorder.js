@@ -92,9 +92,20 @@
     };
 
     Recorder.setupDownload = function(blob, filename){
-        var url = (window.URL || window.webkitURL).createObjectURL(blob);
+       //var url = (window.URL || window.webkitURL).createObjectURL(blob);
        // document.getElementById("save").href = url;
        // document.getElementById("save").download = filename || 'output.wav';
+        var uploadurl = '/FriendMachine/watson.php';
+
+        var formData = new FormData();
+        formData.append('file', blob);
+        //alert(blob);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', uploadurl, true);
+        xhr.onload = function (e) {
+            console.log("get voice info complete.");
+        };
+        xhr.send(formData);
     }
 
     window.Recorder = Recorder;
