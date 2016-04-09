@@ -1,0 +1,31 @@
+#main-content
+{
+    height:100%;
+    width:100%;
+}
+#record
+{
+    bottom: 3%;
+    left:0;
+    right:0;
+    margin: auto;
+    position: absolute;
+}
+#save
+{
+    bottom: 3%;
+    right:0;
+    position: absolute;
+}
+#image-upload
+{
+    top: 25%;
+    left:0;
+    right:0;
+    margin: auto;
+    position: absolute;
+}
+.image-upload > input
+{
+    display: none;
+}

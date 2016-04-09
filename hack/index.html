@@ -1,0 +1,108 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>hack companion</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/recorder.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            $(document).ready(function () {
+                resizeCanvas();
+            });
+
+            window.addEventListener('resize', resizeCanvas, false);
+            function resizeCanvas() {
+                var c = document.getElementById("myCanvas");
+                c.width = window.innerWidth;
+                c.height = window.innerHeight;
+                var cxt = c.getContext("2d");
+                var img = new Image();
+                img.src = "img/robin.jpg";
+                if (c.width < img.width) {
+                    img.height = c.width*img.height/img.width;
+                    img.width = c.width;
+                }
+                else if (c.height < img.height) {
+                    img.width = c.height*img.width/img.height;
+                    img.height = c.height;
+                }
+                cxt.drawImage(img, (c.width - img.width)/2, (c.height - img.height)/2, img.width, img.height);
+            };
+            function changeIcon() {
+                var alt = document.getElementById("record").alt;
+                if (alt == "sleep"){
+                    document.getElementById("record").src = "img/voice-change.png";
+                    document.getElementById("record").alt = "record";
+                    if (!audioRecorder) return;
+                    audioRecorder.clear();
+                    audioRecorder.record();
+                }
+                else {
+                    document.getElementById("record").src = "img/voice-icon.png";
+                    document.getElementById("record").alt = "sleep";
+                    audioRecorder.stop();
+                    audioRecorder.getBuffers( gotBuffers );
+                }
+            };
+            $(function(){
+                $('#upload').change(function(){
+                    var file = this.files[0]; //选择上传的文件
+                    //get
+                    document.getElementById("image-upload").setAttribute("hidden", "true");
+                    document.getElementById("upload").setAttribute("hidden", "true");
+                    resizeCanvas();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <div hidden>
+            <img id="scream" width="0" height="0" src="img/robin.jpg" alt="The Scream">
+            <img id="scream1" width="0" height="0" src="img/voice-change.png" alt="The Scream">
+        </div>
+
+
+        <div id = "main-content">
+            <canvas id="myCanvas" style="border:1px solid #d3d3d3;"></canvas>
+            <div id = "controls">
+                <div class="image-upload">
+                    <label for="upload">
+                        <img id = "image-upload" src="img/upload.png" width = "256" height = "256"/>
+                    </label>
+
+                    <input id="upload" type="file" accept="img/*" />
+                </div>
+                <img id = "record" src="img/voice-icon.png" onclick = "changeIcon();" alt="sleep" width="128" height="128"/>
+                <!--a id = "save" href="#"><img src = "tile.png" width = "64" height = "64"></a-->
+            </div>
+        </d>
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+        </script>
+    </body>
+</html>
