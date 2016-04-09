@@ -60,7 +60,7 @@ var ImageAgent;
 
 function getFaceInfo() {
 
-    var url = '/FriendMachine/sensetime.php';
+    var url = '../sensetime.php';
 
     var formData = new FormData();
     formData.append('file', uploadElement.files[0]);
@@ -74,6 +74,7 @@ function getFaceInfo() {
         faceHeight = faceInfo.rect.bottom - faceInfo.rect.top;
         faceWidth = faceInfo.rect.right - faceInfo.rect.left;
         console.log("get face info complete.");
+        addNaturalBlink();
     };
     xhr.send(formData);
 

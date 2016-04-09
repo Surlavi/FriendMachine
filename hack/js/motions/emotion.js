@@ -177,6 +177,13 @@ var setBasicEmotion = {
 };
 
 function addNaturalBlink() {
-    runningActions.push(emotionMakeParameter("right eye", "close", 1, 100, Loop.blink.map(function (x) { return x; })));
-    runningActions.push(emotionMakeParameter("left eye", "close", 1, 100, Loop.blink.map(function (x) { return x; })));
+    if (runningActions.length == 0) {
+        runningActions.push(emotionMakeParameter("right eye", "close", 1, 1, Loop.blink.map(function (x) { return x; })));
+        runningActions.push(emotionMakeParameter("left eye", "close", 1, 1, Loop.blink.map(function (x) { return x; })));
+
+        startLoop();
+    }
+
+    var time = [3000, 4000, 5000, 9000, 10000];
+    setTimeout(addNaturalBlink, time[parseInt(Math.random() * 100) % 5]);
 }
