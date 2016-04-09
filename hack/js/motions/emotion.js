@@ -175,3 +175,8 @@ var setBasicEmotion = {
 
     }
 };
+
+function addNaturalBlink() {
+    runningActions.push(emotionMakeParameter("right eye", "close", 1, 100, Loop.blink.map(function (x) { return x; })));
+    runningActions.push(emotionMakeParameter("left eye", "close", 1, 100, Loop.blink.map(function (x) { return x; })));
+}

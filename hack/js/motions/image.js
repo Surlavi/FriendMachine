@@ -115,7 +115,7 @@ function getFaceInfo() {
             var points = faceInfo.landmarks21;
             return {
                 down: parseInt(max(points[6][1], points[7][1]) + faceHeight / 20),
-                up: parseInt(min(points[6][1], points[7][1]) - faceHeight / 20),
+                up: parseInt(min(points[6][1], points[7][1]) - faceHeight / 15),
                 left: parseInt(points[6][0] - faceWidth / 20),
                 right: parseInt(points[7][0] + faceWidth / 50),
                 center_x: parseInt(points[16][1]),
@@ -126,7 +126,7 @@ function getFaceInfo() {
             var points = faceInfo.landmarks21;
             return {
                 down: parseInt(max(points[8][1], points[9][1]) + faceHeight / 20),
-                up: parseInt(min(points[8][1], points[9][1]) - faceHeight / 20),
+                up: parseInt(min(points[8][1], points[9][1]) - faceHeight / 15),
                 left: parseInt(points[8][0] - faceWidth / 20),
                 right: parseInt(points[9][0] + faceWidth / 50),
                 center_x: parseInt(points[17][1]),

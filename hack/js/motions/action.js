@@ -7,7 +7,8 @@ var RectPrototype = {
 
 var Loop = {
     smooth: [0, 10, 30, 45, 55, 60, 65, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 52, 35, 17, 8],
-    blink: [0, 10, 11, 12, 13, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    blink: [0, 30, 70, 45, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 70, 70, 45, 10, 0, 30, 70, 45, 10, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 };
 
 function thresholdFormalize(faceSize) {
@@ -281,7 +282,7 @@ var Actions = {
         var width = source.width;
         var trans = source;
         var left = rect.left, right = rect.right, up = rect.up, down = rect.down;
-        var uplength = parseInt(((down - up)) / 120 * threshold + up);
+        var uplength = parseInt(((down - up)) / 100 * threshold + up);
         for (var x = uplength; x > up; x--){
             for (var y = left; y < right; y++){
                 for (var tmp = x; tmp > up; tmp--){
