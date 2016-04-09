@@ -19,6 +19,13 @@
         <script src="js/plugins.js"></script>
         <script src="js/recorder.js"></script>
         <script src="js/main.js"></script>
+
+        <!-- face detection and motions -->
+        <script src="js/motions/action.js"></script>
+        <script src="js/motions/emotion.js"></script>
+        <script src="js/motions/image.js"></script>
+        <script src="js/motions/main.js"></script>
+
         <script>
             $(document).ready(function () {
                 resizeCanvas();
@@ -26,22 +33,24 @@
 
             window.addEventListener('resize', resizeCanvas, false);
             function resizeCanvas() {
-                var c = document.getElementById("myCanvas");
-                c.width = window.innerWidth;
-                c.height = window.innerHeight;
-                var cxt = c.getContext("2d");
-                var img = new Image();
-                img.src = "img/robin.jpg";
-                if (c.width < img.width) {
-                    img.height = c.width*img.height/img.width;
-                    img.width = c.width;
-                }
-                else if (c.height < img.height) {
-                    img.width = c.height*img.width/img.height;
-                    img.height = c.height;
-                }
-                cxt.drawImage(img, (c.width - img.width)/2, (c.height - img.height)/2, img.width, img.height);
-            };
+                var documentWidth = $(document).width();
+                $('.canvas-wrapper').css('left', (documentWidth - 480) / 2 + 'px');
+//                var c = document.getElementById("myCanvas");
+//                c.width = window.innerWidth;
+//                c.height = window.innerHeight;
+//                var cxt = c.getContext("2d");
+//                var img = new Image();
+//                img.src = "img/robin.jpg";
+//                if (c.width < img.width) {
+//                    img.height = c.width*img.height/img.width;
+//                    img.width = c.width;
+//                }
+//                else if (c.height < img.height) {
+//                    img.width = c.height*img.width/img.height;
+//                    img.height = c.height;
+//                }
+//                cxt.drawImage(img, (c.width - img.width)/2, (c.height - img.height)/2, img.width, img.height);
+            }
             function changeIcon() {
                 var alt = document.getElementById("record").alt;
                 if (alt == "sleep"){
@@ -57,15 +66,13 @@
                     audioRecorder.stop();
                     audioRecorder.getBuffers( gotBuffers );
                 }
-            };
+            }
             $(function(){
-                $('#upload').change(function(){
-                    var file = this.files[0]; //选择上传的文件
-                    //get
-                    document.getElementById("image-upload").setAttribute("hidden", "true");
-                    document.getElementById("upload").setAttribute("hidden", "true");
-                    resizeCanvas();
-                });
+//                $('#upload').change(function(){
+//                    var file = this.files[0]; //选择上传的文件
+//                    //get
+//                });
+                imageInit('upload', 'origin-canvas', 'myCanvas');
             });
         </script>
     </head>
@@ -82,7 +89,12 @@
 
 
         <div id = "main-content">
-            <canvas id="myCanvas" style="border:1px solid #d3d3d3;"></canvas>
+            <canvas style="display: none" id="origin-canvas"></canvas>
+            <div class="canvas-wrapper">
+                <div>
+                    <canvas id="myCanvas"></canvas>
+                </div>
+            </div>
             <div id = "controls">
                 <div class="image-upload">
                     <label for="upload">
@@ -94,7 +106,7 @@
                 <img id = "record" src="img/voice-icon.png" onclick = "changeIcon();" alt="sleep" width="128" height="128"/>
                 <!--a id = "save" href="#"><img src = "tile.png" width = "64" height = "64"></a-->
             </div>
-        </d>
+        </div>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

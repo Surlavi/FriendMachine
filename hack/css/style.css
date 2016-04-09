@@ -29,3 +29,9 @@
 {
     display: none;
 }
+
+.canvas-wrapper {
+    width: 480px;
+    height: 100%;
+    position: fixed;
+}
