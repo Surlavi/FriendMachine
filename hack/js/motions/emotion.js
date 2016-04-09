@@ -6,7 +6,7 @@ function addEyeBrowSmile(speed, totPeriod) {
     runningActions.push({
         name: 'sad',
         parameter: ImageAgent.getLeftEyeBrowRect(),
-        loop: Loop.raise,
+        loop: Loop.smooth,
         curIdx: 0,
         countDown: 0,
         speed: 3,
@@ -14,9 +14,9 @@ function addEyeBrowSmile(speed, totPeriod) {
     });
 
     runningActions.push({
-        name: 'raise',
+        name: 'smooth',
         parameter: ImageAgent.getRightEyeBrowRect(),
-        loop: Loop.raise,
+        loop: Loop.smooth,
         curIdx: 0,
         countDown: 0,
         speed: 3,
@@ -28,7 +28,7 @@ function addMouseSad(speed, totPeriod) {
     runningActions.push({
         name: 'sad',
         parameter: ImageAgent.getMouseRect(),
-        loop: Loop.raise,
+        loop: Loop.smooth,
         curIdx: 0,
         countDown: 0,
         speed: 3,
@@ -41,7 +41,7 @@ function addMouseSmile(speed, totPeriod) {
     runningActions.push({
         name: 'smile',
         parameter: ImageAgent.getMouseRect(),
-        loop: Loop.raise,
+        loop: Loop.smooth,
         curIdx: 0,
         countDown: 0,
         speed: 3,
@@ -52,9 +52,9 @@ function addMouseSmile(speed, totPeriod) {
 
 function addEyeSmile(speed, totPeriod) {
     runningActions.push({
-        name: 'raise',
+        name: 'smooth',
         parameter: ImageAgent.getLeftEyeRect(),
-        loop: Loop.raise.map(threshholdFormalize(faceInfo.rect.bottom - faceInfo.rect.top)),
+        loop: Loop.smooth.map(thresholdFormalize(faceInfo.rect.bottom - faceInfo.rect.top)),
         curIdx: 0,
         countDown: 0,
         speed: 3,
@@ -62,9 +62,9 @@ function addEyeSmile(speed, totPeriod) {
     });
 
     runningActions.push({
-        name: 'raise',
+        name: 'smooth',
         parameter: ImageAgent.getRightEyeRect(),
-        loop: Loop.raise.map(threshholdFormalize(faceInfo.rect.bottom - faceInfo.rect.top)),
+        loop: Loop.smooth.map(thresholdFormalize(faceInfo.rect.bottom - faceInfo.rect.top)),
         curIdx: 0,
         countDown: 0,
         speed: 3,
@@ -94,7 +94,7 @@ function addEyeBlink(speed, totPeriod) {
     });
 }
 
-function emotionMakeParameter(unit, actionType, speed, period) {
+function emotionMakeParameter(unit, actionType, speed, period, loop) {
     var unit;
     switch (unit) {
         case "left eye":
@@ -104,7 +104,7 @@ function emotionMakeParameter(unit, actionType, speed, period) {
             unit = ImageAgent.getRightEyeRect();
             break;
         case "left eyebrow":
-            unit = ImageAgent.getLightEyeBrowRect();
+            unit = ImageAgent.getLeftEyeBrowRect();
             break;
         case "right eyebrow":
             unit = ImageAgent.getRightEyeBrowRect();
@@ -116,21 +116,62 @@ function emotionMakeParameter(unit, actionType, speed, period) {
             throw "invalid unit";
     }
 
+    var loopArray = loop ? loop : Loop.smooth;
+
     return {
         name: actionType,
         parameter: unit,
-        loop: Loop.raise.map(threshholdFormalize(faceInfo.rect.bottom - faceInfo.rect.top)),
+        loop: loopArray.map(thresholdFormalize(faceInfo.rect.bottom - faceInfo.rect.top)),
         curIdx: 0,
         countDown: 0,
         speed: speed ? speed : 3,
-        periodLeft: period ? period : 30
+        periodLeft: period ? period : 3
     }
 }
 
 var setBasicEmotion = {
     happy: function () {
-        runningActions.push(emotionMakeParameter("left eye", "raiseOutside"));
-        runningActions.push(emotionMakeParameter("right eye", "raiseOutside"));
-        runningActions.push(emotionMakeParameter("mouse", "smile"));
+        runningActions.push(emotionMakeParameter("left eyebrow", "raise", null, null, Loop.smooth.map(function (x) { return x / 4 * 3; })));
+        runningActions.push(emotionMakeParameter("right eyebrow", "raise", null, null, Loop.smooth.map(function (x) { return x / 4 * 3; })));
+        runningActions.push(emotionMakeParameter("mouse", "smile", null, null, Loop.smooth.map(function (x) { return x / 8 * 7; })));
+        runningActions.push(emotionMakeParameter("left eye", "stare", null, null, Loop.smooth.map(function (x) { return x / 2; })));
+        runningActions.push(emotionMakeParameter("right eye", "stare", null, null, Loop.smooth.map(function (x) { return x / 2; })));
+    },
+
+    sadness: function () {
+        runningActions.push(emotionMakeParameter("right eyebrow", "reduce", null, null, Loop.smooth.map(function (x) { return x / 2; })));
+        runningActions.push(emotionMakeParameter("left eyebrow", "reduce", null, null, Loop.smooth.map(function (x) { return x / 2; })));
+        runningActions.push(emotionMakeParameter("mouse", "sad"));
+        runningActions.push(emotionMakeParameter("right eye", "shrinkUpDown"));
+        runningActions.push(emotionMakeParameter("left eye", "shrinkUpDown"));
+    },
+
+    disgust: function () {
+
+    },
+
+    contempt: function () {
+
+    },
+
+    fear: function () {
+        runningActions.push(emotionMakeParameter("right eyebrow", "raiseLeft", null, null, Loop.smooth.map(function (x) { return x ; })));
+        runningActions.push(emotionMakeParameter("left eyebrow", "raiseRight", null, null, Loop.smooth.map(function (x) { return x ; })));
+        runningActions.push(emotionMakeParameter("left eye", "stare", null, null, Loop.smooth.map(function (x) { return x / 2; })));
+        runningActions.push(emotionMakeParameter("right eye", "stare", null, null, Loop.smooth.map(function (x) { return x / 2; })));
+
+        runningActions.push(emotionMakeParameter("mouse", "raise", null, null, Loop.smooth.map(function (x) { return x / 2; })))
+    },
+
+    anger: function () {
+        runningActions.push(emotionMakeParameter("right eye", "reduceLeft", null, null, Loop.smooth.map(function (x) { return x / 4; })));
+        runningActions.push(emotionMakeParameter("left eye", "reduceRight", null, null, Loop.smooth.map(function (x) { return x / 4; })));
+        runningActions.push(emotionMakeParameter("right eyebrow", "reduceLeft", null, null, Loop.smooth.map(function (x) { return x / 1; })));
+        runningActions.push(emotionMakeParameter("left eyebrow", "reduceRight", null, null, Loop.smooth.map(function (x) { return x / 1; })));
+        runningActions.push(emotionMakeParameter("mouse", "raise", null, null, Loop.smooth.map(function (x) { return x; })));
+    },
+
+    surprise: function () {
+
     }
 };

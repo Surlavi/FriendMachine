@@ -88,18 +88,18 @@ function getFaceInfo() {
             var points = faceInfo.landmarks21;
             return {
                 down: parseInt(max(max(points[0][1], points[1][1]), points[2][1]) + faceHeight / 30),
-                up: parseInt(min(min(points[0][1], points[1][1]), points[2][1] - faceHeight / 20)),
+                up: parseInt(min(min(points[0][1], points[1][1]), points[2][1] - faceHeight / 15)),
                 left: parseInt(points[0][0] - faceWidth / 30),
-                right: parseInt(points[2][0] + faceWidth / 30)
+                right: parseInt(points[2][0] + faceWidth / 25)
             };
         },
         getRightEyeBrowRect: function () {
             var points = faceInfo.landmarks21;
             return {
                 down: parseInt(max(max(points[3][1], points[4][1]), points[5][1]) + faceHeight / 30),
-                up: parseInt(min(min(points[3][1], points[4][1]), points[5][1] - faceHeight / 30)),
+                up: parseInt(min(min(points[3][1], points[4][1]), points[5][1] - faceHeight / 15)),
                 left: parseInt(points[3][0] - faceWidth / 30),
-                right: parseInt(points[5][0] + faceWidth / 30)
+                right: parseInt(points[5][0] + faceWidth / 25)
             };
         },
         getMouseRect: function () {
@@ -117,7 +117,9 @@ function getFaceInfo() {
                 down: parseInt(max(points[6][1], points[7][1]) + faceHeight / 20),
                 up: parseInt(min(points[6][1], points[7][1]) - faceHeight / 20),
                 left: parseInt(points[6][0] - faceWidth / 20),
-                right: parseInt(points[7][0] + faceWidth / 50)
+                right: parseInt(points[7][0] + faceWidth / 50),
+                center_x: parseInt(points[16][1]),
+                center_y: parseInt(points[16][0])
             };
         },
         getRightEyeRect: function () {
@@ -126,7 +128,9 @@ function getFaceInfo() {
                 down: parseInt(max(points[8][1], points[9][1]) + faceHeight / 20),
                 up: parseInt(min(points[8][1], points[9][1]) - faceHeight / 20),
                 left: parseInt(points[8][0] - faceWidth / 20),
-                right: parseInt(points[9][0] + faceWidth / 50)
+                right: parseInt(points[9][0] + faceWidth / 50),
+                center_x: parseInt(points[17][1]),
+                center_y: parseInt(points[17][0])
             };
         }
     }

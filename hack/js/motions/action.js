@@ -6,11 +6,11 @@ var RectPrototype = {
 };
 
 var Loop = {
-    raise: [0, 10, 30, 45, 55, 60, 65, 70, 70, 70, 70, 70, 70, 63, 53, 44, 35, 26, 17, 8],
+    smooth: [0, 10, 30, 45, 55, 60, 65, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 70, 52, 35, 17, 8],
     blink: [0, 10, 11, 12, 13, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 };
 
-function threshholdFormalize(faceSize) {
+function thresholdFormalize(faceSize) {
     return function (x) {
         return x / 360 * faceSize;
     }
@@ -50,9 +50,9 @@ var Actions = {
     },
 
     /**
-     * 内侧向上
+     * 左侧向上
      */
-    raiseInside: function (source, rect, threshold) {
+    raiseLeft: function (source, rect, threshold) {
         var height = source.height;
         var width = source.width;
         threshold /= 4;
@@ -78,9 +78,37 @@ var Actions = {
     },
 
     /**
-     * 外侧向上
+     * 左侧向下
      */
-    raiseOutside: function (source, rect, threshold) {
+    reduceLeft: function (source, rect, threshold) {
+        var height = source.height;
+        var width = source.width;
+        threshold /= 4;
+        var trans = source;
+        for (var x = rect.down; x > rect.up; x--){
+            for (var y = rect.left; y < rect.right; y++){
+                var para = (y - rect.left) / (rect.right - rect.left);
+                var uplength = parseInt(threshold * (1 - para));
+                var origin = parseInt(4 * (x * width + y));
+                var dest = parseInt(4 * ((x + uplength) * width + y));
+                var from = parseInt(4 * (rect.up * width + y));
+                trans.data[dest] = trans.data[origin];
+                trans.data[dest + 1] = trans.data[origin + 1];
+                trans.data[dest + 2] = trans.data[origin + 2];
+                if (uplength >= 2){
+                    trans.data[origin] = trans.data[from];
+                    trans.data[origin + 1] = trans.data[from + 1];
+                    trans.data[origin + 2] = trans.data[from + 2];
+                }
+            }
+        }
+        return trans;
+    },
+
+    /**
+     * 右侧向上
+     */
+    raiseRight: function (source, rect, threshold) {
         var height = source.height;
         var width = source.width;
         var trans = source;
@@ -92,6 +120,34 @@ var Actions = {
                 var origin = parseInt(4 * (x * width + y));
                 var dest = parseInt(4 * ((x - uplength) * width + y));
                 var from = parseInt(4 * (rect.down * width + y));
+                trans.data[dest] = trans.data[origin];
+                trans.data[dest + 1] = trans.data[origin + 1];
+                trans.data[dest + 2] = trans.data[origin + 2];
+                if (uplength >= 2){
+                    trans.data[origin] = trans.data[from];
+                    trans.data[origin + 1] = trans.data[from + 1];
+                    trans.data[origin + 2] = trans.data[from + 2];
+                }
+            }
+        }
+        return trans;
+    },
+
+    /**
+     * 右侧向下
+     */
+    reduceRight: function (source, rect, threshold) {
+        var height = source.height;
+        var width = source.width;
+        var trans = source;
+        threshold /= 4;
+        for (var x = rect.down; x > rect.up; x--){
+            for (var y = rect.left; y < rect.right; y++){
+                var para = (y - rect.left) / (rect.right - rect.left);
+                var uplength = parseInt(threshold * para);
+                var origin = parseInt(4 * (x * width + y));
+                var dest = parseInt(4 * ((x + uplength) * width + y));
+                var from = parseInt(4 * (rect.up * width + y));
                 trans.data[dest] = trans.data[origin];
                 trans.data[dest + 1] = trans.data[origin + 1];
                 trans.data[dest + 2] = trans.data[origin + 2];
@@ -162,7 +218,7 @@ var Actions = {
     /**
      * 中间向下
      */
-    reduce: function (source, rect, threshhold) {
+    reduce: function (source, rect, threshold) {
         var height = source.height;
         var width = source.width;
         var trans = source;
@@ -215,6 +271,30 @@ var Actions = {
             }
         }
         return trans;
+    },
+
+    /**
+     * 向下关闭
+     */
+    close: function (source, rect, threshold) {
+        var height = source.height;
+        var width = source.width;
+        var trans = source;
+        var left = rect.left, right = rect.right, up = rect.up, down = rect.down;
+        var uplength = parseInt(((down - up)) / 120 * threshold + up);
+        for (var x = uplength; x > up; x--){
+            for (var y = left; y < right; y++){
+                for (var tmp = x; tmp > up; tmp--){
+                    var origin = parseInt(4 * (tmp * width + y));
+                    var dest = parseInt(4 * ((tmp + 2) * width + y));
+                    trans.data[dest] = trans.data[origin];
+                    trans.data[dest + 1] = trans.data[origin + 1];
+                    trans.data[dest + 2] = trans.data[origin + 2];
+                }
+            }
+        }
+        return trans;
+
     },
 
     /**
@@ -305,6 +385,125 @@ var Actions = {
                     trans.data[origin] = trans.data[from];
                     trans.data[origin + 1] = trans.data[from + 1];
                     trans.data[origin + 2] = trans.data[from + 2];
+                }
+            }
+        }
+        return trans;
+    },
+
+    /**
+     * stare
+     */
+    stare: function (source, rect, threshold) {
+        var height = source.height;
+        var width = source.width;
+        var trans = source;
+        threshold /= 5;
+        var change = [];
+        var left = rect.left, right = rect.right, up = rect.up, down = rect.down, center_y = rect.center_y, center_x = rect.center_x;
+        var x, y, para_y, para_x;
+        var shift_x, shift_y, origin, dest, from;
+        for (x = up; x < center_x; x++){
+            for (y = left; y < center_y; y++){
+                para_y = (center_y - y) / (right - left);
+                para_x = (center_x - x) / (down - up);
+                para = Math.sqrt(para_x * para_x + para_y * para_y);
+                shift_x = parseInt(threshold * para_x);
+                shift_y = parseInt(threshold * para_y);
+                origin = parseInt(4 * (x * width + y));
+                dest = parseInt(4 * ((x - shift_x) * width + y - shift_y));
+                from = parseInt(4 * (center_x * width + center_y));
+                change[(x - shift_x) * 2000 + y - shift_y - left] = true;
+                trans.data[dest] = trans.data[origin];
+                trans.data[dest + 1] = trans.data[origin + 1];
+                trans.data[dest + 2] = trans.data[origin + 2];
+                if (para >= 0.7 && 0){
+                    trans.data[origin] = trans.data[from];
+                    trans.data[origin + 1] = trans.data[from + 1];
+                    trans.data[origin + 2] = trans.data[from + 2];
+                }
+            }
+        }
+        for (x = down; x > center_x; x--){
+            for (y = left; y < center_y; y++){
+                para_y = Math.abs((center_y - y)) / (right - left);
+                para_x = Math.abs((center_x - x)) / (down - up);
+                para = Math.sqrt(para_x * para_x + para_y * para_y);
+                shift_x = parseInt(threshold * para_x);
+                shift_y = parseInt(threshold * para_y);
+                origin = parseInt(4 * (x * width + y));
+                dest = parseInt(4 * ((x + shift_x) * width + y - shift_y));
+                from = parseInt(4 * (center_x * width + center_y));
+                change[(x + shift_x) * 2000 + y - shift_y] = true;
+                trans.data[dest] = trans.data[origin];
+                trans.data[dest + 1] = trans.data[origin + 1];
+                trans.data[dest + 2] = trans.data[origin + 2];
+                if (para >= 0.7 && 0){
+                    trans.data[origin] = trans.data[from];
+                    trans.data[origin + 1] = trans.data[from + 1];
+                    trans.data[origin + 2] = trans.data[from + 2];
+                }
+            }
+        }
+        for (x = up; x < center_x; x++){
+            for (y = right; y > center_y; y--){
+                para_y = Math.abs((center_y - y)) / (right - left);
+                para_x = Math.abs((center_x - x)) / (down - up);
+                para = Math.sqrt(para_x * para_x + para_y * para_y);
+                shift_x = parseInt(threshold * para_x);
+                shift_y = parseInt(threshold * para_y);
+                origin = parseInt(4 * (x * width + y));
+                dest = parseInt(4 * ((x - shift_x) * width + y + shift_y));
+                from = parseInt(4 * (center_x * width + center_y));
+                change[(x - shift_x) * 2000 + y + shift_y] = true;
+                trans.data[dest] = trans.data[origin];
+                trans.data[dest + 1] = trans.data[origin + 1];
+                trans.data[dest + 2] = trans.data[origin + 2];
+                if (para >= 0.7 && 0){
+                    trans.data[origin] = trans.data[from];
+                    trans.data[origin + 1] = trans.data[from + 1];
+                    trans.data[origin + 2] = trans.data[from + 2];
+                }
+            }
+        }
+        for (x = down; x > center_x; x--){
+            for (y = right; y > center_y; y--){
+                para_y = Math.abs((center_y - y)) / (right - left);
+                para_x = Math.abs((center_x - x)) / (down - up);
+                para = Math.sqrt(para_x * para_x + para_y * para_y);
+                shift_x = parseInt(threshold * para_x);
+                shift_y = parseInt(threshold * para_y);
+                origin = parseInt(4 * (x * width + y));
+                dest = parseInt(4 * ((x + shift_x) * width + y + shift_y));
+                from = parseInt(4 * (center_x * width + center_y));
+                change[(x + shift_x) * 2000 + y + shift_y] = true;
+                trans.data[dest] = trans.data[origin];
+                trans.data[dest + 1] = trans.data[origin + 1];
+                trans.data[dest + 2] = trans.data[origin + 2];
+                if (para >= 0.7 && 0){
+                    trans.data[origin] = trans.data[from];
+                    trans.data[origin + 1] = trans.data[from + 1];
+                    trans.data[origin + 2] = trans.data[from + 2];
+                }
+            }
+        }
+        for (x = up - 20; x < down + 20; x++){
+            for (y = left - 20; y < right + 20; y++){
+                if (change[x * 2000 + y] == false){
+                    dest = 4 * (x * width + y);
+                    from = dest;
+                    for (var i = x - 1; i <= x + 1; i++){
+                        for (var j = y - 1; j <= y + 1; j++){
+                            if (change[i * 2000 + j] == true){
+                                from = 4 * (i * width + j);
+                                break;
+                            }
+                        }
+                    }
+                    trans.data[dest] = trans.data[from];
+                    trans.data[dest + 1] = trans.data[from + 1];
+                    trans.data[dest + 2] = trans.data[from + 2];
+                    //[x][y] = true;
                 }
             }
         }

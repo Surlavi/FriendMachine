@@ -32,8 +32,15 @@ var interval;
 
 function startLoop() {
     interval = setInterval(mainLoop, 30);
+    return 0;
 }
 
 function stopLoop() {
     clearInterval(interval);
+    return 0;
+}
+
+function clearLoop() {
+    runningActions = [];
+    return 0;
 }
