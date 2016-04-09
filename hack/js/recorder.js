@@ -104,9 +104,41 @@
         xhr.open('POST', uploadurl, true);
         xhr.onload = function (e) {
             console.log("get voice info complete.");
+            $("#spinner").hide();
+            var result = JSON.parse(e.target.responseText);
+            var tone = result.tone;
+            tone = tone.sort(function (x, y) { return x.score < y.score });
+            console.log(tone);
+
+            var final;
+
+            for (var i = 0; i < tone.length; ++i) {
+                switch (tone[i].tone_id) {
+                    case "joy":
+                        final = "happy";
+                        break;
+                    case "anger":
+                        final = "anger";
+                        break;
+                    case "sadness":
+                        final = "sadness";
+                        break;
+                    case "disgust":
+                        final = "anger";
+                        break;
+                }
+                if (final) {
+                    break;
+                }
+            }
+
+            clearLoop();
+            stopLoop();
+            setBasicEmotion[final]();
+            startLoop();
         };
         xhr.send(formData);
-    }
+    };
 
     window.Recorder = Recorder;
 
