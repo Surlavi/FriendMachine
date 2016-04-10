@@ -109,7 +109,9 @@
             var tone = result.tone;
             tone = tone.sort(function (x, y) { return x.score < y.score });
             console.log(tone);
-
+            //play audio
+            document.getElementById("audio").src = 'voice/' + tone[0].tone_id + '.wav';
+            document.getElementById("audio").play();
             var final;
 
             for (var i = 0; i < tone.length; ++i) {
