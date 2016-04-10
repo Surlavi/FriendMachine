@@ -3,7 +3,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => "https://v1-api.visioncloudapi.com/face/detection?api_id=c2caf169e9084f0b8bccf2b261ca1db0&api_secret=507944fa672b4496b4ae3545ae493b76&landmarks106=1",
+  CURLOPT_URL => "https://v1-api.visioncloudapi.com/face/detection?api_id=c2caf169e9084f0b8bccf2b261ca1db0&api_secret=507944fa672b4496b4ae3545ae493b76&landmarks106=1&attributes=1",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => "",
   CURLOPT_MAXREDIRS => 10,
