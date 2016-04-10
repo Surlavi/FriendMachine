@@ -72,7 +72,12 @@ function getFaceInfo() {
     var faceHeight, faceWidth;
     xhr.open('POST', url, true);
     xhr.onload = function (e) {
-        faceInfo = JSON.parse(e.target.responseText).faces[0];
+        try {
+            faceInfo = JSON.parse(e.target.responseText).faces[0];
+        } catch (e) {
+            alert("图片信息读取失败");
+            return;
+        }
 
         faceHeight = faceInfo.rect.bottom - faceInfo.rect.top;
         faceWidth = faceInfo.rect.right - faceInfo.rect.left;
